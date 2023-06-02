@@ -1,10 +1,11 @@
-[gd_scene load_steps=37 format=3 uid="uid://c8n2mwlgaq1fh"]
+[gd_scene load_steps=36 format=3 uid="uid://c8n2mwlgaq1fh"]
 
 [ext_resource type="Texture2D" uid="uid://cnhq45375jfhh" path="res://Sprites/background.png" id="1_e0uwe"]
 [ext_resource type="Script" path="res://Scripts/PLAYER.gd" id="2_owqin"]
 [ext_resource type="Texture2D" uid="uid://t4xhe7qk4mmd" path="res://Sprites/skeleton_idle.png" id="2_y1wl8"]
 [ext_resource type="Texture2D" uid="uid://c1jsro5060co1" path="res://Sprites/skeleton_walk.png" id="3_14jcs"]
 [ext_resource type="PackedScene" uid="uid://cymyl1jo0cmr1" path="res://Scenes/base.tscn" id="4_57exs"]
+[ext_resource type="PackedScene" uid="uid://1xefylt2tbnr" path="res://Scenes/dash.tscn" id="6_j51m4"]
 [ext_resource type="Texture2D" uid="uid://pfeuccx2mg3q" path="res://Sprites/light (1).png" id="6_va5nq"]
 
 [sub_resource type="GDScript" id="GDScript_ajibq"]
@@ -212,11 +213,6 @@ func _process(delta):
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cydto"]
 size = Vector2(26, 35.5)
 
-[sub_resource type="GDScript" id="GDScript_d3u0g"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_xvjag"]
-size = Vector2(24, 34)
-
 [node name="level1" type="Node2D"]
 script = SubResource("GDScript_ajibq")
 
@@ -247,25 +243,10 @@ texture_scale = 0.6
 [node name="CollisionShape2D" type="CollisionShape2D" parent="player"]
 shape = SubResource("RectangleShape2D_cydto")
 
-[node name="HITBOX" type="Area2D" parent="player"]
-script = SubResource("GDScript_d3u0g")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="player/HITBOX"]
-shape = SubResource("RectangleShape2D_xvjag")
-debug_color = Color(0.964706, 0, 0.486275, 0.419608)
-
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="player"]
 remote_path = NodePath("../../Camera2D")
 
-[node name="Node2D" type="Node2D" parent="player"]
-
-[node name="Marker2D" type="Marker2D" parent="player/Node2D"]
-position = Vector2(3.05176e-05, 0)
-scale = Vector2(10, 10)
-gizmo_extents = 19.0
-
-[node name="Timer" type="Timer" parent="player"]
-autostart = true
+[node name="Dash" parent="player" instance=ExtResource("6_j51m4")]
 
 [node name="objects" parent="." instance=ExtResource("4_57exs")]
 
@@ -274,4 +255,3 @@ position = Vector2(503, 405)
 zoom = Vector2(2, 2)
 
 [connection signal="animation_looped" from="player/AnimatedSprite2D" to="player" method="_on_animated_sprite_2d_animation_looped"]
-[connection signal="timeout" from="player/Timer" to="player" method="_on_timer_timeout"]

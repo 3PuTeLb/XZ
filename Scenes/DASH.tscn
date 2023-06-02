@@ -1,8 +1,10 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://1xefylt2tbnr"]
 
-[ext_resource type="Script" path="res://Scripts/DASH.gd" id="1_t4q7o"]
+[ext_resource type="Script" path="res://Dash.gd" id="1_nm332"]
 
-[node name="DASH" type="Node2D"]
-script = ExtResource("1_t4q7o")
+[node name="Dash" type="Node2D"]
+script = ExtResource("1_nm332")
 
-[node name="Dash timer" type="Timer" parent="."]
+[node name="dash timer" type="Timer" parent="."]
+wait_time = 0.15
+one_shot = true
