@@ -20,37 +20,71 @@ const dashspeed = 2000
 const dashlength = -1
 @onready var dash = $Dash
 
-func _physics_process(delta):
-	
-	if not is_on_floor():
-		velocity.y += gravity * delta
-		
-	var SPEED = dashspeed if dash.is_dashing() else normSPEED
-		
-	if(velocity.x == 0):
-		anim_sprite.play("idle")
-	else:
-		if(velocity.x > 0):
-			anim_sprite.play("walk right")
-		else:
-			anim_sprite.play("walk left")
-	
-	var direction = Input.get_axis("ui_left", "ui_right")
-	if direction:
-		velocity.x = direction * SPEED
-	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-		
-	if Input.is_action_just_pressed("dash"):
-		dash.start_dash(dashlength)
-		
-	
-	
-	if Input.is_action_just_pressed('ui_space') and JUMP_CONST < JUMP_MAX:
-		velocity.y = JUMP_VELOCITY
-		JUMP_CONST += 1
-		
-	if is_on_floor():
-		JUMP_CONST = 0
+# З Д О Р О В Ь Е
+var health = 100
 
+# С М Е Р Т Ь
+@onready var death = $TextureRect
+
+# П Р О Ц Е С С Ы
+var playy = true
+
+@onready var world = $"../objects"
+
+func _physics_process(delta):
+	if playy:
+		update_health()
+		
+		if not is_on_floor():
+			velocity.y += gravity * delta
+			
+		var SPEED = dashspeed if dash.is_dashing() else normSPEED
+			
+		if(velocity.x == 0):
+			anim_sprite.play("idle")
+		else:
+			if(velocity.x > 0):
+				anim_sprite.play("walk right")
+			else:
+				anim_sprite.play("walk left")
+		
+		var direction = Input.get_axis("ui_left", "ui_right")
+		if direction:
+			velocity.x = direction * SPEED
+		else:
+			velocity.x = move_toward(velocity.x, 0, SPEED)
+			
+		if Input.is_action_just_pressed("dash"):
+			dash.start_dash(dashlength)
+			
+		
+		
+		if Input.is_action_just_pressed('ui_space') and JUMP_CONST < JUMP_MAX:
+			velocity.y = JUMP_VELOCITY
+			JUMP_CONST += 1
+			
+		if is_on_floor():
+			JUMP_CONST = 0
+			
+		if Input.is_action_just_pressed("damage"):
+			health-=20
+			printt(health)
+	else:
+		death.visible = true
+		anim_sprite.visible = false
+		world.visible = false
+		
 	move_and_slide()
+
+func update_health():
+	var healthbar = $HealthBar
+	healthbar.value = health
+
+func _on_regin_timer_timeout():
+	if health < 100:
+		if health > 100:
+			health = 100
+		if health <= 0:
+			health = 0
+			playy = false
+		health += 4

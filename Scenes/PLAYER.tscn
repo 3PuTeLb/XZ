@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://c8n2mwlgaq1fh"]
+[gd_scene load_steps=37 format=3 uid="uid://c8n2mwlgaq1fh"]
 
 [ext_resource type="Texture2D" uid="uid://cnhq45375jfhh" path="res://Sprites/background.png" id="1_e0uwe"]
 [ext_resource type="Script" path="res://Scripts/PLAYER.gd" id="2_owqin"]
@@ -7,8 +7,12 @@
 [ext_resource type="PackedScene" uid="uid://cymyl1jo0cmr1" path="res://Scenes/base.tscn" id="4_57exs"]
 [ext_resource type="PackedScene" uid="uid://1xefylt2tbnr" path="res://Scenes/dash.tscn" id="6_j51m4"]
 [ext_resource type="Texture2D" uid="uid://pfeuccx2mg3q" path="res://Sprites/light (1).png" id="6_va5nq"]
+[ext_resource type="Texture2D" uid="uid://dq5j5r3n5xsc1" path="res://icon.svg" id="7_vr7j7"]
 
 [sub_resource type="GDScript" id="GDScript_ajibq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cydto"]
+size = Vector2(26, 35.5)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_apcws"]
 atlas = ExtResource("2_y1wl8")
@@ -210,20 +214,28 @@ func _process(delta):
 	pass
 "
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_cydto"]
-size = Vector2(26, 35.5)
-
 [node name="level1" type="Node2D"]
 script = SubResource("GDScript_ajibq")
 
 [node name="Background" type="Sprite2D" parent="."]
-position = Vector2(730, 386)
-scale = Vector2(59.0859, 30.8359)
+position = Vector2(1964, 1234)
+scale = Vector2(259.656, 106.266)
 texture = ExtResource("1_e0uwe")
 
 [node name="player" type="CharacterBody2D" parent="."]
 position = Vector2(503, 405)
 script = ExtResource("2_owqin")
+
+[node name="TextureRect" type="TextureRect" parent="player"]
+visible = false
+offset_left = -777.0
+offset_top = -270.0
+offset_right = 1223.0
+offset_bottom = 230.0
+texture = ExtResource("7_vr7j7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="player"]
+shape = SubResource("RectangleShape2D_cydto")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="player"]
 scale = Vector2(2.6211, 2.53125)
@@ -235,18 +247,29 @@ metadata/Animet = false
 [node name="PointLight2D" type="PointLight2D" parent="player"]
 position = Vector2(0, 3)
 scale = Vector2(1.65574, 1.50894)
-energy = 0.2
+energy = 0.05
 shadow_enabled = true
 texture = ExtResource("6_va5nq")
 texture_scale = 0.6
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="player"]
-shape = SubResource("RectangleShape2D_cydto")
 
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="player"]
 remote_path = NodePath("../../Camera2D")
 
 [node name="Dash" parent="player" instance=ExtResource("6_j51m4")]
+
+[node name="HealthBar" type="ProgressBar" parent="player"]
+modulate = Color(0.890196, 0.0313726, 0, 1)
+texture_filter = 2
+offset_left = -273.0
+offset_top = -150.0
+offset_right = -150.0
+offset_bottom = -134.0
+scale = Vector2(1.04, 1)
+show_percentage = false
+
+[node name="regin_timer" type="Timer" parent="player"]
+wait_time = 0.5
+autostart = true
 
 [node name="objects" parent="." instance=ExtResource("4_57exs")]
 
@@ -255,3 +278,4 @@ position = Vector2(503, 405)
 zoom = Vector2(2, 2)
 
 [connection signal="animation_looped" from="player/AnimatedSprite2D" to="player" method="_on_animated_sprite_2d_animation_looped"]
+[connection signal="timeout" from="player/regin_timer" to="player" method="_on_regin_timer_timeout"]
